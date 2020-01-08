@@ -1,0 +1,110 @@
+---
+
+- name: Add Etcher repo key
+  become: yes
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 379CE192D401AB61
+
+- name: Add Etcher repository
+  become: yes
+  apt_repository:
+    repo: 'deb https://deb.etcher.io stable etcher'
+
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - ansible
+      - balena-etcher-electron
+      - docker.io
+      - docker-compose
+      - git
+      - jq
+      - libssl-dev
+      - meld
+      - net-tools
+      - openjdk-11-jdk
+      - openjdk-11-source
+      - packer
+      - traceroute
+      - usb-creator-gtk
+      - vagrant
+      - zeal
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
+
+- name: Install snap packages
+  become: yes
+  command: 'snap install {{item}}'
+  with_items:
+    - insomnia
+
+- name: Include OpenJ9 tasks
+  include: openj9.yml
+  tags: openj9
+
+- name: Include GraalVM tasks
+  include: graalvm.yml
+  tags: graalvm
+
+- name: Determine Java directory
+  shell: 'type -p javac|xargs readlink -f|xargs dirname|xargs dirname'
+  args:
+    executable: /bin/bash
+  register: java_home_output
+
+- name: Set JAVA_HOME
+  become: yes
+  lineinfile:
+    dest: /etc/environment
+    regexp: '^JAVA_HOME'
+    line: 'JAVA_HOME="{{java_home_output.stdout}}"'
+    state: present
+
+- name: Set Git config
+  git_config:
+     name: '{{item.name}}'
+     value: '{{item.value}}'
+     scope: global
+  with_items:
+    - {name: 'user.name', value: '{{user}}'}
+    - {name: 'user.email', value: '{{git_email}}'}
+    - {name: 'http.postBuffer', value: '524288000'}
+    - {name: 'status.submoduleSummary', value: 'true'}
+    - {name: 'core.editor', value: 'nano'}
+    - {name: 'merge.tool', value: 'meld'}
+    - {name: 'diff.tool', value: 'meld'}
+    - {name: 'diff.guitool', value: 'meld'}
+    - {name: 'color.diff', value: 'auto'}
+    - {name: 'color.status', value: 'auto'}
+    - {name: 'color.branch', value: 'auto'}
+    - {name: 'color.interactive', value: 'auto'}
+    - {name: 'color.ui', value: 'true'}
+    - {name: 'color.pager', value: 'true'}
+
+- name: Create workspace directory
+  file:
+    path: '{{home}}/workspace'
+    state: directory
+
+- name: Create Zeal docset directory
+  file:
+    path: '{{home}}/.local/share/Zeal/Zeal/docsets'
+    state: directory
+  tags:
+  - zeal
+
+- name: Download Zeal docsets
+  unarchive:
+    src: 'http://frankfurt.kapeli.com/feeds/{{item.src}}.tgz'
+    dest: '{{home}}/.local/share/Zeal/Zeal/docsets'
+    remote_src: yes
+    creates: '{{home}}/.local/share/Zeal/Zeal/docsets/{{item.target}}.docset'
+  with_items:
+    - {src: 'Ansible', target: 'Ansible'}
+    - {src: 'Docker', target: 'Docker'}
+    - {src: 'Java_SE10', target: 'Java'}
+  tags:
+  - zeal

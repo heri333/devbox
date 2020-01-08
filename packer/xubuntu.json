@@ -1,0 +1,117 @@
+{
+  "variables": {
+    "vm_ram": "8192",
+    "vm_vram": "128",
+    "vm_cpus": "1",
+    "vm_shared_host_folder": "{{ pwd }}/shared-workspace",
+    "vm_shared_folder_name": "shared-workspace",
+    "ssh_username": "vagrant",
+    "ssh_password": "vagrant"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "guest_additions_mode": "disable",
+      "keep_registered": "true",
+      "guest_os_type": "Ubuntu_64",
+      "iso_url": "{{user `vm_iso`}}",
+      "iso_checksum": "{{user `vm_iso_checksum_md5`}}",
+      "iso_checksum_type": "md5",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_timeout": "60m",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `vm_ram`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "{{user `vm_vram`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `vm_cpus`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--ioapic",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--hwvirtex",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--clipboard",
+          "bidirectional"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--draganddrop",
+          "bidirectional"
+        ],
+        [
+          "sharedfolder",
+          "add",
+          "{{.Name}}",
+          "--name",
+          "{{user `vm_shared_folder_name`}}",
+          "--hostpath",
+          "{{user `vm_shared_host_folder`}}",
+          "--automount"
+        ]
+      ],
+      "boot_command": [
+        "<esc><wait>",
+        "linux",
+        " auto",
+        " console-setup/ask_detect=false",
+        " console-setup/layoutcode=de",
+        " console-setup/modelcode=pc105",
+        " debconf/frontend=noninteractive",
+        " debian-installer=en_US.UTF-8",
+        " fb=false",
+        " initrd=/initrd.gz",
+        " keymap=de debian-installer/keymap=de",
+        " kbd-chooser/method=de",
+        " keyboard-configuration/layout=Germany",
+        " keyboard-configuration/variant=Germany",
+        " locale=en_US.UTF-8",
+        " netcfg/get_domain=vm",
+        " netcfg/get_hostname=vagrant",
+        " grub-installer/bootdev=/dev/sda",
+        " noapic",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed/default.cfg<wait>",
+        " -- <enter><wait>"
+      ],
+      "boot_wait": "5s",
+      "http_directory": ".",
+      "shutdown_command": "sudo -S shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `ssh_password`}}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+      "inline": [ "echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers" ]
+    },
+    {
+      "type": "ansible",
+      "extra_arguments": [ "--extra-vars", "user={{user `ssh_username`}} git_email={{user `git_email`}}"],
+      "playbook_file": "./ansible/playbook-vm.yml"
+    }
+  ]
+}

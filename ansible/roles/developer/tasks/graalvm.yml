@@ -1,0 +1,67 @@
+---
+
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - zlib1g-dev
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
+
+- name: Create GraalVM target directory
+  become: yes
+  file:
+    path: '{{graalvm_dir}}'
+    state: directory
+    owner: '{{user}}'
+
+- name: Download GraalVM
+  become: yes
+  get_url:
+    url: '{{graalvm_url}}'
+    dest: '{{graalvm_tmp}}'
+    timeout: 600
+
+- name: Extract GraalVM
+  become: yes
+  unarchive:
+    src: '{{graalvm_tmp}}'
+    dest: '{{graalvm_dir}}'
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+    owner: '{{user}}'
+    creates: '{{graalvm_dir}}/bin'
+
+- name: Create GraalVM symlink
+  become: yes
+  file:
+    src: '{{graalvm_dir}}'
+    dest: '{{graalvm_link}}'
+    state: link
+    owner: '{{user}}'
+
+- name: Download GraalVM native-image
+  become: yes
+  get_url:
+    url: '{{graalvm_native_url}}'
+    dest: '{{graalvm_native_path}}'
+    timeout: 300
+
+- name: Install GraalVM native-image
+  become: yes
+  command: '{{graalvm_dir}}/bin/gu -L install {{graalvm_native_path}}'
+
+- name: Ensure GraalVM permissions
+  become: yes
+  file:
+    path: '{{graalvm_dir}}'
+    state: directory
+    owner: '{{user}}'
+    recurse: yes
+
+- name: Add GraalVM to path
+  lineinfile:
+    dest: '{{home}}/.profile'
+    line: 'PATH="$PATH:{{graalvm_link}}/bin"'
+    state: present

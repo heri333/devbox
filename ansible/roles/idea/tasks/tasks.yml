@@ -1,0 +1,52 @@
+---
+
+- name: Create IDEA target directory
+  become: yes
+  file:
+    path: '{{intellij_idea_dir}}'
+    state: directory
+    owner: '{{user}}'
+
+- name: Download and extract IDEA
+  become: yes
+  unarchive:
+    src: '{{intellij_idea_url}}'
+    dest: '{{intellij_idea_dir}}'
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+    owner: '{{user}}'
+    creates: '{{intellij_idea_dir}}/bin'
+
+- name: Create IDEA symlink
+  become: yes
+  file:
+    src: '{{intellij_idea_dir}}'
+    dest: '{{intellij_idea_link}}'
+    state: link
+    owner: '{{user}}'
+
+- name: Set IDEA VM options
+  become: yes
+  template:
+    src: idea.vmoptions.j2
+    dest: '{{intellij_idea_dir}}/bin/idea64.vmoptions'
+
+- name: Install IDEA desktop file
+  become: yes
+  template:
+    src: jetbrains-idea.desktop.j2
+    dest: '/usr/share/applications/jetbrains-idea.desktop'
+    owner: root
+    group: root
+    mode: 'u=rw,go=r'
+
+- name: Create fonts directory
+  file:
+    path: '{{home}}/.fonts/'
+    state: directory
+
+- name: Copy fonts
+  synchronize:
+    src: 'fonts/'
+    dest: '{{home}}/.fonts/'
+  notify: Refresh font cache

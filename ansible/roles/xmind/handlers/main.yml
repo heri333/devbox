@@ -1,0 +1,5 @@
+---
+
+- name: Refresh font cache
+  become: yes
+  command: 'fc-cache -f'

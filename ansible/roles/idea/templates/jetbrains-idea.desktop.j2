@@ -1,0 +1,13 @@
+#!/usr/bin/env xdg-open
+# {{ ansible_managed }}
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA
+Icon={{ intellij_idea_link }}/bin/idea.png
+Exec="{{ intellij_idea_link }}/bin/idea.sh" %f
+Comment=Develop with pleasure!
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-idea

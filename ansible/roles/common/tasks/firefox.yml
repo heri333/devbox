@@ -1,0 +1,15 @@
+- name: Create Firefox profile
+  command: 'xvfb-run firefox -no-remote -CreateProfile default'
+  args:
+    creates: '{{home}}/.mozilla/firefox/*.default'
+
+- name: Determine Firefox profile directory
+  shell: 'ls {{home}}/.mozilla/firefox/ | grep -m1 default | tr -d \\012\\015'
+  args:
+    executable: /bin/bash
+  register: firefox_profile_dir
+
+- name: Set Firefox config
+  template:
+    src: user.js.j2
+    dest: '{{home}}/.mozilla/firefox/{{firefox_profile_dir.stdout}}/user.js'

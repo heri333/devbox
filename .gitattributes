@@ -1,0 +1,14 @@
+# Handle line endings automatically for files detected as text and leave all files detected as binary untouched
+* text=auto
+
+# These files should be left untouched (binary is a macro for -text -diff)
+*.pdf    binary
+*.png    binary
+*.bat    binary
+*.jpg    binary
+*.jpeg   binary
+*.otf    binary
+*.py     binary
+*.txt    binary
+*.class  binary
+*.jar    binary

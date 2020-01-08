@@ -1,0 +1,4 @@
+---
+
+home: '/home/{{user}}'
+download_dir: '{{home}}/Downloads'

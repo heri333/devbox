@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+# {{ ansible_managed }}
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=XMind 8
+Icon={{ xmind_dir }}/xmind.png
+Exec="{{ xmind_dir }}/XMind_amd64/XMind" -vm /usr/lib/jvm/java-8-openjdk-amd64/bin/java %f
+Comment=Create and share mind maps.
+Categories=Office;
+Terminal=false

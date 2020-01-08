@@ -1,0 +1,33 @@
+---
+
+- name: Create OpenJ9 target directory
+  become: yes
+  file:
+    path: '{{openj9_dir}}'
+    state: directory
+    owner: '{{user}}'
+
+- name: Download OpenJ9
+  become: yes
+  get_url:
+    url: '{{openj9_url}}'
+    dest: '{{openj9_tmp}}'
+    timeout: 600
+
+- name: Extract OpenJ9
+  become: yes
+  unarchive:
+    src: '{{openj9_tmp}}'
+    dest: '{{openj9_dir}}'
+    remote_src: yes
+    extra_opts: ['--strip-components=1']
+    owner: '{{user}}'
+    creates: '{{openj9_dir}}/bin'
+
+- name: Create OpenJ9 symlink
+  become: yes
+  file:
+    src: '{{openj9_dir}}'
+    dest: '{{openj9_link}}'
+    state: link
+    owner: '{{user}}'

@@ -1,0 +1,218 @@
+---
+
+- name: Disable display power management
+  command: 'xfconf-query -n -t bool -c xfce4-power-manager -p /xfce4-power-manager/dpms-enabled -s "false"'
+  tags:
+    - vm
+
+- name: Disable black display
+  command: 'xfconf-query -n -t bool -c xfce4-power-manager -p /xfce4-power-manager/blank-on-ac -s "false"'
+  tags:
+    - vm
+
+- name: Disable screensaver
+  command: 'xfconf-query -n -t bool -c xfce4-screensaver -p /saver/enabled -s "false"'
+  tags:
+    - vm
+
+- name: Disable lock screen
+  command: 'xfconf-query -n -t bool -c xfce4-screensaver -p /lock/enabled -s "false"'
+  tags:
+    - vm
+
+- name: Add KeePassXC repository
+  become: yes
+  apt_repository:
+    repo: 'ppa:phoerious/keepassxc'
+
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - alacarte
+      - blueman
+      - bluez-tools
+      - catfish
+      - exfat-fuse
+      - exfat-utils
+      - filezilla
+      - firefox
+      - firefox-locale-de
+      - galculator
+      - gimp
+      - git
+      - gparted
+      - gpicview
+      - gtk2-engines-murrine
+      - gtk2-engines-pixbuf
+      - gvfs-backends
+      - htop
+      - hyphen-de
+      - inkscape
+      - keepassxc
+      - libcurl4-gnutls-dev
+      - libreoffice-writer
+      - libreoffice-calc
+      - libreoffice-impress
+      - libreoffice-draw
+      - libreoffice-gtk
+      - libreoffice-l10n-de
+      - myspell-de-de
+      - mythes-de
+      - ncdu
+      - papirus-icon-theme
+      - qpdfview
+      - scite
+      - synaptic
+      - terminator
+      - thunar-archive-plugin
+      - ttf-mscorefonts-installer
+      - unzip
+      - update-notifier
+      - vlc
+      - xarchiver
+      - xfce4-taskmanager
+      - xvfb
+      - ubuntu-restricted-extras
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
+
+- name: Include Firefox tasks
+  include: firefox.yml
+  tags: firefox
+
+- name: Copy desktop background image
+  become: yes
+  copy:
+    src: 'desktop.png'
+    dest: '/usr/share/backgrounds/{{user}}-desktop.png'
+
+- name: Determine wallpaper setting
+  shell: 'xfconf-query --channel xfce4-desktop --list | grep -m1 last-image | tr -d \\012\\015'
+  args:
+    executable: /bin/bash
+  register: wallpaper_setting_output
+
+- name: Update desktop background image
+  command: 'xfconf-query -c xfce4-desktop -p {{wallpaper_setting_output.stdout}} -s "/usr/share/backgrounds/{{user}}-desktop.png"'
+
+- name: Correct menu categories of programs
+  become: yes
+  lineinfile:
+    dest: '/usr/share/applications/{{item.name}}'
+    regexp: '^Categories='
+    line: 'Categories={{item.categories}}'
+    state: present
+  with_items:
+    - {name: 'libreoffice-math.desktop', categories: 'Office;Spreadsheet;;Science;Math;'}
+    - {name: 'SciTE.desktop', categories: 'TextEditor;Development;GTK;Office;'}
+
+- name: Clone Qogir theme repository
+  git:
+    repo: 'https://github.com/vinceliuice/Qogir-theme.git'
+    dest: '{{download_dir}}/qogir'
+    update: no
+
+- name: Install Qogir theme
+  command: '{{download_dir}}/qogir/install.sh'
+
+- name: Choose Qogir theme
+  command: 'xfconf-query -c xsettings -p /Net/ThemeName -s "Qogir"'
+
+- name: Choose Qogir theme
+  command: 'xfconf-query -c xsettings -p /Net/IconThemeName -s "ePapirus"'
+
+- name: Create autostart directory
+  file:
+    path: '{{home}}/.config/autostart/'
+    state: directory
+
+- name: Include terminal tasks
+  include: terminal.yml
+
+- name: Add KeePassXC wordlist
+  become: yes
+  copy:
+    src: 'wortliste.txt'
+    dest: '/usr/share/keepassxc/wordlists/german.wordlist'
+
+- name: Configure SciTE
+  copy:
+    src: 'SciTEUser.properties'
+    dest: '{{home}}/.SciTEUser.properties'
+
+- name: Create ramdisk for /tmp
+  become: yes
+  command: 'cp -v /usr/share/systemd/tmp.mount /etc/systemd/system/'
+  args:
+    creates: '/etc/systemd/system/tmp.mount'
+
+- name: Make sure ramdisk for /tmp is enabled
+  become: yes
+  service:
+    enabled: yes
+    use: systemctl
+    name: tmp.mount
+
+- name: Enable huge pages
+  become: yes
+  lineinfile:
+    dest: '/etc/sysctl.conf'
+    regexp: '^vm.nr_hugepages'
+    line: 'vm.nr_hugepages = 128'
+    state: present
+
+- name: Create SSH directory
+  file:
+    path: '{{home}}/.ssh'
+    state: directory
+
+- name: Create SSH key for user
+  user:
+    name: '{{user}}'
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+
+- name: Set SSH config
+  template:
+    src: ssh.config.j2
+    dest: '{{home}}/.ssh/config'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,7 @@
+---
+
+home: '/home/{{user}}'
+xmind_workspace_dir: '{{home}}/.xmind'
+xmind_version: '8-update9'
+xmind_dir: '/opt/xmind-{{xmind_version}}'
+xmind_url: 'https://www.xmind.net/xmind/downloads/xmind-{{xmind_version}}-linux.zip'
