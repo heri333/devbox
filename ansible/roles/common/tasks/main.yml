@@ -33,6 +33,7 @@
       - blueman
       - bluez-tools
       - catfish
+      - cifs-utils
       - exfat-fuse
       - exfat-utils
       - filezilla
@@ -46,6 +47,7 @@
       - gtk2-engines-murrine
       - gtk2-engines-pixbuf
       - gvfs-backends
+      - gvfs-fuse
       - htop
       - hyphen-de
       - inkscape
@@ -56,6 +58,7 @@
       - libreoffice-impress
       - libreoffice-draw
       - libreoffice-gtk
+      - libreoffice-gnome
       - libreoffice-l10n-de
       - myspell-de-de
       - mythes-de
