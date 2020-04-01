@@ -183,39 +183,6 @@
     src: ssh.config.j2
     dest: '{{home}}/.ssh/config'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- name: Include AWS CLI tasks
+  include: aws-cli-2.yml
+  tags: aws_cli
