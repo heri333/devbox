@@ -60,6 +60,8 @@
       - libreoffice-gtk
       - libreoffice-gnome
       - libreoffice-l10n-de
+      - linuxbrew-wrapper
+      - maven
       - myspell-de-de
       - mythes-de
       - ncdu
