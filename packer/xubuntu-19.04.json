@@ -1,4 +1,4 @@
 {
-  "vm_iso": "http://archive.ubuntu.com/ubuntu/dists/eoan/main/installer-amd64/current/images/netboot/mini.iso",
+  "vm_iso": "http://archive.ubuntu.com/ubuntu/dists/eoan/main/installer-amd64/20101020ubuntu593/images/netboot/mini.iso",
   "vm_iso_checksum_md5": "9a438d312d45282e44e58eeee069e9eb"
 }

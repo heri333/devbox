@@ -1,0 +1,5 @@
+---
+
+- name: Clear apt cache
+  become: yes
+  command: 'apt-get clean'

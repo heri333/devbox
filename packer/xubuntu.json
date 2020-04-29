@@ -6,20 +6,22 @@
     "vm_shared_host_folder": "{{ pwd }}/shared-workspace",
     "vm_shared_folder_name": "shared-workspace",
     "ssh_username": "vagrant",
-    "ssh_password": "vagrant"
+    "ssh_password": "vagrant",
+    "cloud_token": "{{ env `VAGRANT_CLOUD_TOKEN` }}",
+    "version": "1.{{ env `GITHUB_RUN_NUMBER` }}"
   },
   "builders": [
     {
       "type": "virtualbox-iso",
       "guest_additions_mode": "disable",
-      "keep_registered": "true",
+      "keep_registered": "false",
       "guest_os_type": "Ubuntu_64",
       "iso_url": "{{user `vm_iso`}}",
       "iso_checksum": "{{user `vm_iso_checksum_md5`}}",
       "iso_checksum_type": "md5",
       "ssh_username": "{{user `ssh_username`}}",
       "ssh_password": "{{user `ssh_password`}}",
-      "ssh_timeout": "60m",
+      "ssh_timeout": "30m",
       "headless": "true",
       "vboxmanage": [
         [
@@ -98,7 +100,7 @@
         " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed/default.cfg<wait>",
         " -- <enter><wait>"
       ],
-      "boot_wait": "5s",
+      "boot_wait": "20s",
       "http_directory": ".",
       "shutdown_command": "sudo -S shutdown -P now"
     }
@@ -114,5 +116,16 @@
       "extra_arguments": [ "--extra-vars", "user={{user `ssh_username`}} git_email={{user `git_email`}}"],
       "playbook_file": "./ansible/playbook-vm.yml"
     }
+  ],
+  "post-processors": [
+    [
+      "vagrant",
+      {
+        "type": "vagrant-cloud",
+        "box_tag": "frostcode/devbox",
+        "access_token": "{{user `cloud_token`}}",
+        "version": "{{user `version`}}"
+      }
+    ]
   ]
 }

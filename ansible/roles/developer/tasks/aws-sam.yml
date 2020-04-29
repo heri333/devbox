@@ -1,0 +1,36 @@
+---
+
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - build-essential
+      - curl
+      - file
+      - git
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
+
+- name: Install Linuxbrew
+  shell: 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)" < /dev/null'
+  args:
+    executable: /bin/bash
+    creates: '{{linuxbrew_bin_dir}}'
+
+- name: Add Linuxbrew to path
+  lineinfile:
+    dest: '{{home}}/.profile'
+    line: 'PATH="$PATH:{{linuxbrew_bin_dir}}"'
+    state: present
+
+- name: Add AWS Linuxbrew repository
+  shell: '{{linuxbrew_bin_dir}}/brew tap aws/tap'
+  args:
+    executable: /bin/bash
+
+- name: Install AWS SAM
+  homebrew:
+    name: aws-sam-cli
+    path: '{{linuxbrew_bin_dir}}'
+    state: present
