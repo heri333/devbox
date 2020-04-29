@@ -104,7 +104,14 @@
     creates: '{{home}}/.local/share/Zeal/Zeal/docsets/{{item.target}}.docset'
   with_items:
     - {src: 'Ansible', target: 'Ansible'}
-    - {src: 'Docker', target: 'Docker'}
-    - {src: 'Java_SE10', target: 'Java'}
+    - {src: 'Java_SE11', target: 'Java'}
   tags:
   - zeal
+
+- name: Include AWS CLI tasks
+  include: aws-cli-2.yml
+  tags: aws_cli
+
+- name: Include AWS SAM tasks
+  include: aws-sam.yml
+  tags: aws_sam

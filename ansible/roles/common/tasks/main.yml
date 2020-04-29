@@ -40,6 +40,7 @@
       - firefox
       - firefox-locale-de
       - galculator
+      - gdebi
       - gimp
       - git
       - gparted
@@ -60,7 +61,6 @@
       - libreoffice-gtk
       - libreoffice-gnome
       - libreoffice-l10n-de
-      - linuxbrew-wrapper
       - maven
       - myspell-de-de
       - mythes-de
@@ -82,6 +82,7 @@
     update_cache: yes
     cache_valid_time: 86400
     state: latest
+  notify: Clear apt cache
 
 - name: Include Firefox tasks
   include: firefox.yml
@@ -184,7 +185,3 @@
   template:
     src: ssh.config.j2
     dest: '{{home}}/.ssh/config'
-
-- name: Include AWS CLI tasks
-  include: aws-cli-2.yml
-  tags: aws_cli
