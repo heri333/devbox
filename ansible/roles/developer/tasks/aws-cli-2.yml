@@ -16,10 +16,8 @@
     dest: '{{download_dir}}'
     remote_src: yes
     owner: '{{user}}'
-    creates: '{{download_dir}}/aws'
 
 - name: Install AWS CLI
   become: yes
-  command: '{{download_dir}}/aws/install --install-dir {{aws_cli_install_dir}} --bin-dir {{aws_cli_bin_dir}}'
-  args:
-    creates: '{{aws_cli_install_dir}}'
+  command: '{{download_dir}}/aws/install --install-dir {{aws_cli_install_dir}} --bin-dir {{aws_cli_bin_dir}} --update'
+
