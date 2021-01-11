@@ -1,4 +1,4 @@
 {
-  "vm_iso": "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/20101020ubuntu613/legacy-images/netboot/mini.iso",
-  "vm_iso_checksum_md5": "5cbc47c26af985bb4e7190b453b1973e"
+  "vm_iso": "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/20101020ubuntu614/legacy-images/netboot/mini.iso",
+  "vm_iso_checksum_md5": "e5bf713621b43207dead707396da29f6"
 }
