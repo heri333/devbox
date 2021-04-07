@@ -1,12 +1,12 @@
 ---
 
 home: '/home/{{user}}'
-openj9_version: '0.23.0'
-openj9_url: 'https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.9%2B11_openj9-0.23.0/OpenJDK11U-jdk_x64_linux_openj9_11.0.9_11_openj9-0.23.0.tar.gz'
+openj9_version: '0.24.0'
+openj9_url: 'https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.10%2B9_openj9-0.24.0/OpenJDK11U-jdk_x64_linux_openj9_11.0.10_9_openj9-0.24.0.tar.gz'
 openj9_tmp: '/opt/openj9-{{openj9_version}}.tar.gz'
 openj9_dir: '/opt/openj9-{{openj9_version}}'
 openj9_link: '/opt/openj9'
-graalvm_version: '20.3.0'
+graalvm_version: '21.0.0.2'
 graalvm_url: 'https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{{graalvm_version}}/graalvm-ce-java11-linux-amd64-{{graalvm_version}}.tar.gz'
 graalvm_native_url: 'https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{{graalvm_version}}/native-image-installable-svm-java11-linux-amd64-{{graalvm_version}}.jar'
 graalvm_tmp: '/opt/graalvm-{{graalvm_version}}.tar.gz'

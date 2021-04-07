@@ -2,4 +2,10 @@
 
 - name: Clear apt cache
   become: yes
-  command: 'apt-get clean'
+  command:
+    cmd: 'apt-get clean'
+    warn: false
+
+- name: Refresh font cache
+  become: yes
+  command: 'fc-cache -f'

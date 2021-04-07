@@ -62,7 +62,7 @@
       - libreoffice-gnome
       - libreoffice-l10n-de
       - maven
-      - myspell-de-de
+      - myspell-de-de-1901
       - mythes-de
       - ncdu
       - papirus-icon-theme
@@ -72,13 +72,13 @@
       - terminator
       - thunar-archive-plugin
       - ttf-mscorefonts-installer
+      - ubuntu-restricted-extras
       - unzip
       - update-notifier
       - vlc
       - xarchiver
       - xfce4-taskmanager
       - xvfb
-      - ubuntu-restricted-extras
     update_cache: yes
     cache_valid_time: 86400
     state: latest

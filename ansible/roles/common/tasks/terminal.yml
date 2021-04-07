@@ -1,8 +1,30 @@
+- name: Install packages
+  become: yes
+  apt:
+    pkg:
+      - exa
+      - zsh
+    update_cache: yes
+    cache_valid_time: 86400
+    state: latest
+  notify: Clear apt cache
+
 - name: Install snap packages
   become: yes
   command: 'snap install {{item}}'
   with_items:
     - starship
+
+- name: Create fonts directory
+  file:
+    path: '{{home}}/.fonts/'
+    state: directory
+
+- name: Copy fonts
+  synchronize:
+    src: 'fonts/'
+    dest: '{{home}}/.fonts/'
+  notify: Refresh font cache
 
 - name: Configure Starship
   copy:
@@ -55,3 +77,44 @@
     dest: '{{home}}/.bashrc'
     line: 'eval "$(starship init bash)"'
     state: present
+
+- name: Set ZSH as default shell
+  become: yes
+  user:
+    name: "{{user}}"
+    shell: /bin/zsh
+
+- name: Clone Oh My ZSH repository
+  git:
+    repo: 'git@github.com:ohmyzsh/ohmyzsh.git'
+    dest: '{{home}}/.oh-my-zsh'
+    accept_hostkey: yes
+    update: no
+
+- name: Clone Powerlevel10k theme repository
+  git:
+    repo: 'git@github.com:romkatv/powerlevel10k.git'
+    dest: '{{home}}/.oh-my-zsh/custom/themes/powerlevel10k'
+    accept_hostkey: yes
+    update: no
+
+- name: Clone ZSH plugin repositories
+  git:
+    repo: 'git@github.com:zsh-users/{{item}}.git'
+    dest: '{{home}}/.oh-my-zsh/custom/plugins/{{item}}'
+    accept_hostkey: yes
+    update: no
+  with_items:
+    - zsh-autosuggestions
+    - zsh-syntax-highlighting
+    - zsh-history-substring-search
+
+- name: Configure Powerlevel10k
+  copy:
+    src: 'p10k.zsh'
+    dest: '{{home}}/.p10k.zsh'
+
+- name: Configure ZSH
+  copy:
+    src: 'zshrc'
+    dest: '{{home}}/.zshrc'
