@@ -1,0 +1,19 @@
+---
+
+- name: Create Visual Studio Code target directory
+  become: yes
+  file:
+    path: '{{vscode_download_dir}}'
+    state: directory
+    owner: '{{user}}'
+
+- name: Download Visual Studio Code package
+  get_url:
+    url: '{{vscode_url}}'
+    dest: '{{vscode_download_dir}}/'
+  register: vscode
+
+- name: Install Visual Studio Code package
+  become: yes
+  apt:
+    deb: '{{vscode.dest}}'

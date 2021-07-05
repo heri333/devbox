@@ -62,9 +62,11 @@
       - libreoffice-gnome
       - libreoffice-l10n-de
       - maven
+      - micro
       - myspell-de-de-1901
       - mythes-de
       - ncdu
+      - nethogs
       - papirus-icon-theme
       - qpdfview
       - scite

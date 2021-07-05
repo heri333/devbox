@@ -1,16 +1,5 @@
 ---
 
-- name: Add Etcher repo key
-  become: yes
-  apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: 379CE192D401AB61
-
-- name: Add Etcher repository
-  become: yes
-  apt_repository:
-    repo: 'deb https://deb.etcher.io stable etcher'
-
 - name: Install packages
   become: yes
   apt:
@@ -40,6 +29,16 @@
   command: 'snap install {{item}}'
   with_items:
     - insomnia
+
+- name: Download Etcher package
+  get_url:
+    url: '{{etcher_url}}'
+    dest: '{{etcher_tmp_deb}}'
+
+- name: Install Etcher package
+  become: yes
+  apt:
+    deb: '{{etcher_tmp_deb}}'
 
 - name: Include OpenJ9 tasks
   include: openj9.yml

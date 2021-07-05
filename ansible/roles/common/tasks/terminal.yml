@@ -15,15 +15,11 @@
   with_items:
     - starship
 
-- name: Create fonts directory
-  file:
-    path: '{{home}}/.fonts/'
-    state: directory
-
 - name: Copy fonts
+  become: yes
   synchronize:
     src: 'fonts/'
-    dest: '{{home}}/.fonts/'
+    dest: '/usr/local/share/fonts/'
   notify: Refresh font cache
 
 - name: Configure Starship

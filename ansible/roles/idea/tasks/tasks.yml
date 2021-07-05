@@ -40,13 +40,9 @@
     group: root
     mode: 'u=rw,go=r'
 
-- name: Create fonts directory
-  file:
-    path: '{{home}}/.fonts/'
-    state: directory
-
 - name: Copy fonts
+  become: yes
   synchronize:
     src: 'fonts/'
-    dest: '{{home}}/.fonts/'
+    dest: '/usr/local/share/fonts/'
   notify: Refresh font cache
