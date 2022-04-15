@@ -1,0 +1,4 @@
+{
+  "vm_iso": "http://cdimage.ubuntu.com/xubuntu/releases/hirsute/release/xubuntu-21.04-desktop-amd64.iso",
+  "vm_iso_checksum_sha256": "7f01f21760b87afbe9fa86615c666d763fd41adcac00a57f000fd52d6605cff7"
+}

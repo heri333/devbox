@@ -1,3 +1,35 @@
+- name: Remove packages (since Firefox is now provided only as Snap package)
+  become: yes
+  apt:
+    pkg:
+      - firefox
+    state: absent
+
+- name: Download and extract Firefox
+  become: yes
+  unarchive:
+    src: '{{firefox_url}}'
+    dest: '{{firefox_dir}}'
+    remote_src: yes
+    owner: '{{user}}'
+    creates: '{{firefox_dir}}/firefox'
+
+- name: Create Firefox symlink
+  become: yes
+  file:
+    src: '{{firefox_dir}}/firefox/firefox'
+    dest: '/usr/local/bin/firefox'
+    state: link
+    owner: '{{user}}'
+
+- name: Download Firefox desktop file
+  become: yes
+  get_url:
+    url: '{{firefox_desktop_file_url}}'
+    dest: '/usr/share/applications/firefox.desktop'
+    timeout: 600
+    owner: '{{user}}'
+
 - name: Create Firefox profile
   command: 'xvfb-run firefox -no-remote -CreateProfile default'
   args:

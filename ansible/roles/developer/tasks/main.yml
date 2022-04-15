@@ -13,8 +13,8 @@
       - libssl-dev
       - meld
       - net-tools
-      - openjdk-11-jdk
-      - openjdk-11-source
+      - openjdk-17-jdk
+      - openjdk-17-source
       - packer
       - traceroute
       - usb-creator-gtk

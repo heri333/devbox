@@ -37,14 +37,13 @@
       - exfat-fuse
       - exfat-utils
       - filezilla
-      - firefox
-      - firefox-locale-de
+      - flatpak
       - galculator
       - gdebi
       - gimp
       - git
+      - gnome-software-plugin-flatpak
       - gparted
-      - gpicview
       - gtk2-engines-murrine
       - gtk2-engines-pixbuf
       - gvfs-backends
@@ -63,6 +62,7 @@
       - libreoffice-l10n-de
       - maven
       - micro
+      - mirage
       - myspell-de-de-1901
       - mythes-de
       - ncdu
@@ -85,6 +85,13 @@
     cache_valid_time: 86400
     state: latest
   notify: Clear apt cache
+
+- name: Add the flathub flatpak repository remote
+  become: yes
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
 
 - name: Include Firefox tasks
   include: firefox.yml
@@ -116,14 +123,28 @@
     - {name: 'libreoffice-math.desktop', categories: 'Office;Spreadsheet;;Science;Math;'}
     - {name: 'SciTE.desktop', categories: 'TextEditor;Development;GTK;Office;'}
 
+- name: Create Xsessionrc file
+  file:
+    path: '{{home}}/.xsessionrc'
+    state: file
+  tags: hidpi
+
+- name: Set QT scale factor to 2 for HiDPI
+  lineinfile:
+    dest: '{{home}}/.xsessionrc'
+    regexp: 'QT_SCALE_FACTOR'
+    line: 'export QT_SCALE_FACTOR=2'
+    state: present
+  tags: hidpi
+
 - name: Clone Qogir theme repository
   git:
     repo: 'https://github.com/vinceliuice/Qogir-theme.git'
     dest: '{{download_dir}}/qogir'
-    update: no
+    update: yes
 
 - name: Install Qogir theme
-  command: '{{download_dir}}/qogir/install.sh'
+  command: '{{download_dir}}/qogir/install.sh --tweaks hidpi'
 
 - name: Choose Qogir theme
   command: 'xfconf-query -c xsettings -p /Net/ThemeName -s "Qogir"'
