@@ -35,7 +35,6 @@
       - catfish
       - cifs-utils
       - exfat-fuse
-      - exfat-utils
       - filezilla
       - flatpak
       - galculator
@@ -126,7 +125,7 @@
 - name: Create Xsessionrc file
   file:
     path: '{{home}}/.xsessionrc'
-    state: file
+    state: touch
   tags: hidpi
 
 - name: Set QT scale factor to 2 for HiDPI

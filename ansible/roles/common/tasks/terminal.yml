@@ -82,21 +82,21 @@
 
 - name: Clone Oh My ZSH repository
   git:
-    repo: 'git@github.com:ohmyzsh/ohmyzsh.git'
+    repo: 'https://github.com/ohmyzsh/ohmyzsh.git'
     dest: '{{home}}/.oh-my-zsh'
     accept_hostkey: yes
     update: no
 
 - name: Clone Powerlevel10k theme repository
   git:
-    repo: 'git@github.com:romkatv/powerlevel10k.git'
+    repo: 'https://github.com/romkatv/powerlevel10k.git'
     dest: '{{home}}/.oh-my-zsh/custom/themes/powerlevel10k'
     accept_hostkey: yes
     update: no
 
 - name: Clone ZSH plugin repositories
   git:
-    repo: 'git@github.com:zsh-users/{{item}}.git'
+    repo: 'https://github.com/zsh-users/{{item}}.git'
     dest: '{{home}}/.oh-my-zsh/custom/plugins/{{item}}'
     accept_hostkey: yes
     update: no

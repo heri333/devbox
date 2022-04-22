@@ -5,7 +5,6 @@
   apt:
     pkg:
       - ansible
-      - balena-etcher-electron
       - docker.io
       - docker-compose
       - git
