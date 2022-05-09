@@ -22,6 +22,15 @@
     state: link
     owner: '{{user}}'
 
+- name: Fix Firefox ownership
+  become: yes
+  file:
+    path: '{{firefox_dir}}/firefox'
+    state: directory
+    recurse: yes
+    owner: '{{user}}'
+    group: '{{user}}'
+
 - name: Download Firefox desktop file
   become: yes
   get_url:

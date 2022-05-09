@@ -96,21 +96,6 @@
   include: firefox.yml
   tags: firefox
 
-- name: Copy desktop background image
-  become: yes
-  copy:
-    src: 'desktop.png'
-    dest: '/usr/share/backgrounds/{{user}}-desktop.png'
-
-- name: Determine wallpaper setting
-  shell: 'xfconf-query --channel xfce4-desktop --list | grep -m1 last-image | tr -d \\012\\015'
-  args:
-    executable: /bin/bash
-  register: wallpaper_setting_output
-
-- name: Update desktop background image
-  command: 'xfconf-query -c xfce4-desktop -p {{wallpaper_setting_output.stdout}} -s "/usr/share/backgrounds/{{user}}-desktop.png"'
-
 - name: Correct menu categories of programs
   become: yes
   lineinfile:
@@ -133,6 +118,14 @@
     dest: '{{home}}/.xsessionrc'
     regexp: 'QT_SCALE_FACTOR'
     line: 'export QT_SCALE_FACTOR=2'
+    state: present
+  tags: hidpi
+
+- name: Set GDK_SCALE scale factor to 2 for HiDPI
+  lineinfile:
+    dest: '{{home}}/.xsessionrc'
+    regexp: 'GDK_SCALE'
+    line: 'export GDK_SCALE=2'
     state: present
   tags: hidpi
 

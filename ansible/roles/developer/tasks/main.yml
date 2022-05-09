@@ -102,7 +102,7 @@
     creates: '{{home}}/.local/share/Zeal/Zeal/docsets/{{item.target}}.docset'
   with_items:
     - {src: 'Ansible', target: 'Ansible'}
-    - {src: 'Java_SE11', target: 'Java'}
+    - {src: 'Java_SE17', target: 'Java'}
   tags:
   - zeal
 
