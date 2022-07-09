@@ -61,18 +61,19 @@
       - libreoffice-l10n-de
       - maven
       - micro
-      - mirage
       - myspell-de-de-1901
       - mythes-de
       - ncdu
       - nethogs
       - papirus-icon-theme
       - qpdfview
+      - ristretto
       - scite
       - synaptic
       - terminator
       - thunar-archive-plugin
       - ttf-mscorefonts-installer
+      - tumbler
       - ubuntu-restricted-extras
       - unzip
       - update-notifier
@@ -136,7 +137,7 @@
     update: yes
 
 - name: Install Qogir theme
-  command: '{{download_dir}}/qogir/install.sh --tweaks hidpi'
+  command: '{{download_dir}}/qogir/install.sh'
 
 - name: Choose Qogir theme
   command: 'xfconf-query -c xsettings -p /Net/ThemeName -s "Qogir"'
